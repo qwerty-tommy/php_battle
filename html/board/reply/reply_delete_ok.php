@@ -1,5 +1,5 @@
 <?php
-$conn= mysqli_connect('localhost', 'tmproot', 'rootword', 'db000');
+require_once('../../../config/login_config.php');
 $rno = $_POST['rno']; 
 $sql = mysqli_query($conn, "select * from reply where idx='".$rno."'");
 $reply = $sql->fetch_array();

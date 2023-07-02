@@ -33,7 +33,7 @@
             </tr>
         </thead>
         <?php
-          $conn= mysqli_connect('localhost', 'tmproot', 'rootword', 'db000');
+          require_once('../../config/login_config.php');
           $sql = mysqli_query($conn,"ALTER TABLE board AUTO_INCREMENT=1");
           $sql = mysqli_query($conn,"SET @COUNT = 0");
           $sql = mysqli_query($conn,"UPDATE board SET board.idx = @COUNT:=@COUNT+1");

@@ -1,6 +1,6 @@
 <?php	
 	$bno = $_GET['idx'];
-	$conn= mysqli_connect('localhost', 'tmproot', 'rootword', 'db000');
+	require_once('../../config/login_config.php');
 	$sql = mysqli_query($conn, "delete from board where idx='$bno';");
 	$sql2 = mysqli_query($conn, "delete from reply where con_num='$bno';");
 ?>

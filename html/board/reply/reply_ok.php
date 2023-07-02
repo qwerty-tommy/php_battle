@@ -1,5 +1,5 @@
 <?php
-    $conn= mysqli_connect('localhost', 'tmproot', 'rootword', 'db000');
+    require_once('../../../config/login_config.php');
     $bno = $_GET['idx'];
     $userpw = $_POST['dat_pw'];
     

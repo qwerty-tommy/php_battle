@@ -13,7 +13,7 @@
 
         $sql = "SELECT * FROM login WHERE login_id='$userid'";
         $result = mysqli_query($conn, $sql);
-        if (mysqli_num_rows($result) > 0) {
+        if (mysqli_num_rows($result) == 1) {
             $row = mysqli_fetch_assoc($result);
             $hashedPassword = $row['login_pw'];
             if (password_verify($userpw, $hashedPassword)) {

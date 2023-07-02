@@ -5,7 +5,7 @@
     <title>php로그인</title>
     <?php   
     	$bno = $_GET['idx'];
-	$conn= mysqli_connect('localhost', 'tmproot', 'rootword', 'db000');
+	require_once('../../config/login_config.php');
     	$sql = mysqli_query($conn, "select * from board where idx='$bno';");
 	$board = $sql->fetch_array();
     
