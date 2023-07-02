@@ -2,7 +2,6 @@
 	box-sizing: border-box;
 }
 
-
 body {
 	font-family: Arial, sans-serif;
 	margin: 0;
@@ -10,13 +9,35 @@ body {
 	background-color: #f5f5f5;
 }
 
+a {
+	text-decoration: none;
+	color: #4CAF50
+}
+
+h1 {
+	text-align: center;
+	color: #000;
+}
+
+#wrapper-full{
+	width: 80%;
+	background-color: #fdfdfd;
+	margin: 20px auto;
+	padding: 20px;
+	border-radius:5px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}	
+
 .card {
 	background-color: #fff;
 	border-radius: 5px;
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 	padding: 20px;
+	margin-bottom: 10px;
 	margin-bottom: 20px;
-	
+	margin-left: auto;
+	margin-right: auto;
+	width: 90%;
 }
 
 h2 {
@@ -25,6 +46,7 @@ h2 {
 }
 
 #user_info {
+	text-align: right;
 	margin-bottom: 10px;
 	color: #888;
 }
@@ -39,21 +61,6 @@ h2 {
 #bo_content {
 	margin-bottom: 10px;
 	line-height: 1.5;
-}
-
-#bo_ser {
-	margin-top: 10px;
-}
-
-#bo_ser ul {
-	list-style-type: none;
-	padding: 0;
-	margin: 0;
-}
-
-#bo_ser ul li {
-	display: inline-block;
-	margin-right: 10px;
 }
 
 .reply_view {
@@ -72,8 +79,6 @@ h2 {
 	margin-top: 20px;
 }
 
-.dat_user,
-.dat_pw,
 .reply_content {
 	width: 100%;
 	padding: 10px;
@@ -93,4 +98,39 @@ h2 {
 
 .re_bt:hover {
 	background-color: #0056b3;
+}
+
+.wrapper-button{
+	text-align: right;
+	margin-right: 0;
+}
+
+a.button-edit,
+a.button-delete{
+	margin-right: 0;
+	padding: 5px 10px;
+	font-size: 16px;
+	background-color: #4CAF50;
+	color: #fff;
+	border: none;
+	border-radius: 3px;
+	cursor: pointer;
+}
+
+.button-edit:hover,
+.button-delete:hover{
+	background-color: #4C9F10;
+}
+
+
+textarea::placeholder {
+	font-family: Arial, sans-serif; 
+	font-style: italic; 
+	color: #999; 
+}
+
+input::placeholder {
+	font-family: Arial, sans-serif; 
+	font-style: italic; 
+	color: #999; 
 }

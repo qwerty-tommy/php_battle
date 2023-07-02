@@ -5,7 +5,8 @@
     <title>Login</title>
     <link rel="stylesheet" href="../style/style_login.css">
     <?php
-    session_start();
+	session_start();
+	
     if (isset($_POST['userid']) && isset($_POST['userpw'])) {
         $userid = $_POST['userid'];
         $userpw = $_POST['userpw'];
@@ -19,7 +20,7 @@
             if (password_verify($userpw, $hashedPassword)) {
                 $_SESSION['userid'] = $userid;
                 header('Location: ../board/board.php');
-                exit;
+				exit;
             }
         }
         $message = "Login err..";

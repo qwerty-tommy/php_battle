@@ -3,12 +3,20 @@
   <link rel="stylesheet" href="../style/style_write.css">
   <meta charset="UTF-8">
   <title>board</title>
+  <?php
+    session_start();
+	if (!isset($_SESSION['userid'])) {
+		header('Location: ../login/login.php');
+		exit();
+	}
+	?>
+		
   <script>
     function handleFileSelect(event) {
-        var input = event.target;
-        var fileName = input.files[0].name;
-        var fileNameDisplay = document.getElementById("file-name-display");
-        fileNameDisplay.textContent = fileName;
+      var input = event.target;
+      var fileName = input.files[0].name;
+      var fileNameDisplay = document.getElementById("file-name-display");
+      fileNameDisplay.textContent = fileName;
     }
   </script>
 </head>

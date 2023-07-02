@@ -5,7 +5,14 @@
 	<title>post</title>
 </head>
 <body>
-	<?php
+	<div id="wrapper-full">
+		<h4><a href="board.php">←Back</a></h4>
+		<?php
+		session_start();
+		if (!isset($_SESSION['userid'])) {
+			header('Location: ../login/login.php');
+			exit();
+		}	
 		require_once('../../config/login_config.php');
 		$bno = $_GET['idx'];
 		$hit = mysqli_fetch_array(mysqli_query($conn, "select * from board where idx ='$bno'"));
@@ -13,66 +20,68 @@
 		$fet = mysqli_query($conn, "update board set hit = '$hit' where idx = '$bno'");
 		$sql = mysqli_query($conn, "select * from board where idx='$bno'");
 		$board = $sql->fetch_array();
-	?>
-	
-	
-	
-	<div class="card">
-		<h2><?php echo $board['title']; ?></h2>
-		<div id="user_info">
-			<?php echo $board['name']; ?> <?php echo $board['date']; ?> 조회:<?php echo $board['hit']; ?>
+		$sql2=mysqli_query($conn, "select * from file where board_num='$bno'");
+		?>
+		
+		<!--- main post start-->
+		
+		<div class="post_view card">
+			<h2><?php echo $board['title']; ?></h2>
 			<div id="bo_line"></div>
-		</div>
-		<div id="bo_content">
-			<?php echo nl2br("$board[content]"); ?>
-		</div>
-		<?php
-			$sql2=mysqli_query($conn, "select * from file where board_num='$bno'");
+			<div id="bo_content">
+				<?php echo nl2br("$board[content]"); ?>
+			</div>
+			<?php
 			while($file= mysqli_fetch_array($sql2)) {
 			?>
-			파일 : <a href="/var/www/upload/<?php echo $file['file'];?>" download><?php echo $file['file']; ?></a>	
+				<a href="/var/www/upload/<?php echo $file['file'];?>" download><?php echo $file['file']; ?></a>
+				<br>
 			<?php			
 			}	
-		?>	
-		<div id="bo_ser">
-			<ul>
-				<li><a href="board.php">[목록으로]</a></li>
-				<li><a href="ck_modify.php?idx=<?php echo $board['idx']; ?>">[수정]</a></li>
-				<li><a href="ck_delete.php?idx=<?php echo $board['idx']; ?>">[삭제]</a></li>
-			</ul>
-		</div>
-	</div>
-	
-	<!--- reply list start-->
-	<hr>
-	
-	<div class="reply_view card">
-		<?php
-			$sql3 = mysqli_query($conn, "select * from reply where con_num='$bno' order by idx desc");
-			while($reply = $sql3->fetch_array()){ 
-		?>
-		<div><b><?php echo $reply['name'];?></b></div>
-		<div><?php echo nl2br("$reply[content]"); ?></div>
-		<div><?php echo $reply['date']; ?></div>
-		<div>
-			<a href="reply/reply_modify.php?bno=<?php echo $reply['con_num']; ?>&rno=<?php echo $reply['idx']; ?>">수정</a>
-			<a href="reply/reply_delete.php?bno=<?php echo $reply['con_num']; ?>&rno=<?php echo $reply['idx']; ?>">삭제</a>
-		</div>
-	</div>
-	<?php } ?>
-
-	<!--- reply input form start-->
-	<br>
-	
-	<div class="card">
-		<form action="reply/reply_ok.php?idx=<?php echo $bno; ?>" method="post">
-			<input type="text" name="dat_user" id="dat_user" class="dat_user" size="15" placeholder="아이디">
-			<input type="password" name="dat_pw" id="dat_pw" class="dat_pw" size="15" placeholder="비밀번호">
-			<div style="margin-top:10px; ">
-				<textarea name="content" class="reply_content" id="re_content" ></textarea>
-				<button id="rep_bt" class="re_bt">댓글 달기</button>
+			?>
+			<div id="user_info">
+				<?php echo $board['name'];?> <?php echo $board['date']; ?> Hit:<?php echo $board['hit']; ?>
 			</div>
-		</form>
+			<div id="bo_ser" class="wrapper-button">
+				<a class="button-edit" href="ck_modify.php?idx=<?php echo $board['idx']; ?>">edit</a>
+				<a class="button-delete" href="ck_delete.php?idx=<?php echo $board['idx']; ?>">delete</a>
+			</div>
+		</div>
+		
+		<!--- reply list start-->
+	
+		<?php
+		$sql3 = mysqli_query($conn, "select * from reply where post_id='$bno' order by idx desc");
+		while($reply = $sql3->fetch_array()){ 
+		?>
+		<div class="reply_view card">
+			<div>
+				<h4><?php echo nl2br("$reply[content]");?></h4>
+			</div>
+			<div id="user_info">
+				<?php echo $reply['name'];?> <?php echo $reply['date']; ?>
+			</div>
+			<div class="wrapper-button">
+				<a class="button-edit" href="reply/reply_modify.php?rno=<?php echo $reply['idx']; ?>">edit</a>
+				<a class="button-delete" href="reply/reply_delete.php?rno=<?php echo $reply['idx']; ?>">delete</a>
+			</div>
+		</div>
+		<?php 
+		} 
+		?>
+
+		<!--- reply input form start-->
+		
+		<div class="card">
+			<form action="reply/reply_ok.php?idx=<?php echo $bno; ?>" method="post">
+				<div style="margin-top:-10px; ">
+					<textarea style="height: 20vw; " name="content" class="reply_content" id="re_content" placeholder="Content"></textarea>
+				</div>
+				<div class="wrapper-button">
+					<button id="rep_bt" class="re_bt">reply</button>
+				</div>
+			</form>
+		</div>
 	</div>
 </body>
 </html>

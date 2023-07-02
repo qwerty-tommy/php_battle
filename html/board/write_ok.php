@@ -26,13 +26,7 @@
 
 		$ext = explode(".", strtolower($filename),2);
 
-		if($ext[1]==null){
-			echo "<script>
-			alert('Attack Detected! :(');
-			history.back();</script>"; 
-			exit;
-		}
-		if(!($ext[1]=="txt"||$ext[1]=="png"||$ext[1]=="jpg")){
+		if(!($ext[1]==null)&&!($ext[1]=="txt"||$ext[1]=="png"||$ext[1]=="jpg")){
 			echo "<script>
 			alert('Unsupported extension :(');
 			history.back();</script>"; 
@@ -62,7 +56,7 @@
 	}
 ?>
 <script type="text/javascript">
-    alert("글쓰기 완료되었습니다.");
+    alert("Post ok!");
     location.href = "board.php";
 </script>
 

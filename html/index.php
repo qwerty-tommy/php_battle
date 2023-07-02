@@ -4,6 +4,6 @@
     <title>haha</title>
   </head>
   <body>
-    <script>location.href="/login/login.php"</script>
+    <script>location.href="/board/board.php"</script>
   </body>
 </html>

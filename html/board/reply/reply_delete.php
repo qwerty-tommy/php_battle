@@ -1,23 +1,31 @@
-<!doctype html>
-<head>
-    <meta charset="UTF-8">
-    <title>게시판</title>
-</head>
-<body>
-	<?php
-	$conn= mysqli_connect('localhost', 'tmproot', 'rootword', 'db000');
-	$bno = $_GET['bno']; 
-	$rno = $_GET['rno']; 
-	
-	echo $bno;
-	echo $rno;	
-	?>
+<?php
+require_once('../../../config/login_config.php');
 
-	<div>
-		<form action="reply_delete_ok.php" method="post">
-			<input type="hidden" name="rno" value="<?php echo $rno; ?>" /><input type="hidden" name="bno" value="<?php echo $bno; ?>">
-	 		<p>비밀번호<input type="password" name="pw" /> <input type="submit" value="확인"></p>
-		 </form>
-	</div>
-</body>
-</html>
+session_start();
+$uid=$_SESSION['userid'];
+if(!isset($uid)) {
+	header('Location: ../login/login.php');
+	exit();
+}
+
+$rno = $_GET['rno']; 
+if(!isset($_GET['rno'])){
+	header('Location: ../board/board.php');
+	exit();
+}
+
+$sql = mysqli_query($conn, "select * from reply where idx='".$rno."'");
+$reply = $sql->fetch_array();
+
+if($uid==$reply['name']){
+	$sql = mysqli_query($conn, "delete from reply where idx='".$rno."'"); ?>
+	<script type="text/javascript"> location.replace(document.referrer);</script>
+	<?php
+	$sql = mysqli_query($conn,"ALTER TABLE reply AUTO_INCREMENT=1");
+	$sql = mysqli_query($conn,"SET @COUNT = 0");
+	$sql = mysqli_query($conn,"UPDATE reply SET reply.idx = @COUNT:=@COUNT+1");
+	?>
+<?php 
+}else{ ?>
+	<script type="text/javascript">alert('Authentication failed.. :(');history.back();</script>
+<?php } ?>
