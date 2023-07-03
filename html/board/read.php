@@ -5,6 +5,16 @@
 	<title>post</title>
 </head>
 <body>
+	<div id="nav">
+	  <?php
+	  session_start();
+	  if (isset($_SESSION['userid'])) {
+	      echo '<a href="./logout.php">Logout</a>';
+	  } else {
+	      echo '<a href="../login/login.php">Login</a>';
+	  }
+	  ?>
+	</div>
 	<div id="wrapper-full">
 		<h4><a href="board.php">←Back</a></h4>
 		<?php
@@ -43,10 +53,29 @@
 				<?php echo $board['name'];?> <?php echo $board['date']; ?> Hit:<?php echo $board['hit']; ?>
 			</div>
 			<div id="bo_ser" class="wrapper-button">
-				<a class="button-edit" href="ck_modify.php?idx=<?php echo $board['idx']; ?>">edit</a>
-				<a class="button-delete" href="ck_delete.php?idx=<?php echo $board['idx']; ?>">delete</a>
-			</div>
+        <a class="button-edit" href="#" onclick="editPost(<?php echo $board['idx']; ?>)">edit</a>
+        <a class="button-delete" href="delete.php?bno=<?php echo $board['idx']; ?>">delete</a>
+    	</div>
 		</div>
+		<script>
+			function editPost(idx) {
+		    // AJAX 요청 보내기
+		    var xhr = new XMLHttpRequest();
+		    xhr.open('POST', 'edit_post.php');
+		    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+		    xhr.onload = function() {
+	        if (xhr.status === 200) {
+            // 서버에서 응답을 받았을 때의 동작
+            // 예를 들어, 수정이 성공했을 경우 메시지를 표시하거나 업데이트된 내용을 화면에 반영할 수 있습니다.
+            alert(xhr.responseText);
+	        } else {
+            // 오류 처리
+            alert('An error occurred while editing the post.');
+	        }
+		    };
+		    xhr.send('idx=' + idx);
+			}
+		</script>
 		
 		<!--- reply list start-->
 	

@@ -7,10 +7,17 @@
 </head>
 <body>
 	<div id="nav">
-		<a href="../login/login.php">Logout</a>
+	  <?php
+	  session_start();
+	  if (isset($_SESSION['userid'])) {
+	      echo '<a href="./logout.php">Logout</a>';
+	  } else {
+	      echo '<a href="../login/login.php">Login</a>';
+	  }
+	  ?>
 	</div>
 	<div id="board_area"> 
-		<h1>forum</h1>
+		<h1>Forum</h1>
 		<div id="search_box">
 		  <form action="search/search_result.php" method="get">
 		    <select name="catgo">

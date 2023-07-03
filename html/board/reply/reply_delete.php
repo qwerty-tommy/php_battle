@@ -14,7 +14,7 @@ if(!isset($_GET['rno'])){
 	exit();
 }
 
-$sql = mysqli_query($conn, "select * from reply where idx='".$rno."'");
+$sql = mysqli_query($conn, "select name from reply where idx='".$rno."'");
 $reply = $sql->fetch_array();
 
 if($uid==$reply['name']){

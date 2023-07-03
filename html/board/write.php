@@ -4,13 +4,12 @@
   <meta charset="UTF-8">
   <title>board</title>
   <?php
-    session_start();
+	session_start();
 	if (!isset($_SESSION['userid'])) {
 		header('Location: ../login/login.php');
 		exit();
 	}
-	?>
-		
+	?>	
   <script>
     function handleFileSelect(event) {
       var input = event.target;
@@ -37,20 +36,12 @@
 		    <div id="in_title">
 		      <textarea name="title" id="utitle" rows="1" cols="55" placeholder="Title" maxlength="100" required></textarea>
 		    </div>
-		    <div id="in_name">
-		      <textarea name="name" id="uname" rows="1" cols="55" placeholder="Writer" maxlength="100" required></textarea>
-		    </div>
 		    <div id="in_content">
 		      <textarea name="content" id="ucontent" placeholder="Content" required></textarea>
 		    </div>
-		    <div id="in_password">
-		      <input type="password" name="pw" id="upw" placeholder="Password" required />
-		  	</div>
-		    <hr>
 		    <div id="in_submit">
 		    	<button type="submit">Go!</button>
 		    </div>
-        <input type="hidden" value="1000000" name="MAX_FILE_SIZE" />
       </form>
     </div>
   </div>

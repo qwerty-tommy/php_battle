@@ -10,7 +10,7 @@
 	}	
   
   if($bno && $_POST['content']){
-    $sql = mysqli_query($conn, "insert into reply(con_num,name,content) values('".$bno."','".$uid."','".$_POST['content']."')");
+    $sql = mysqli_query($conn, "insert into reply(post_id,name,content) values('".$bno."','".$uid."','".$_POST['content']."')");
     echo "<script>location.href='../read.php?idx=$bno';</script>";
   }else{
     echo "<script>alert('Something\'s wrong.. :('); 
