@@ -99,13 +99,22 @@ button[type="submit"]:hover {
     font-size: 14px;
     color: #888;
 }
+    
+#in_title > textarea{
+    height: 100%;
+}
 
+#in_title {
+    height: 50px;
+}
+    
 #in_content > textarea{
     height: 100%;
 }
 
 #in_content {
-    height: 25vw;
+	margin-top: 7px;
+    height: 30vw;
 }
 
 #in_file {

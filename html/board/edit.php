@@ -1,70 +1,89 @@
 <?php
 session_start();
-if (!isset($_SESSION['userid'])) {
-    header('Location: ../login/login.php');
-    exit();
+$uid = $_SESSION['userid'];
+if (!isset($uid)) {
+  header('Location: ../login/login.php');
+  exit();
 }
 
+$bno = $_GET['bno'];
 require_once('../../config/login_config.php');
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $bno = $_POST['bno'];
-    $title = $_POST['title'];
-    $content = $_POST['content'];
+$sql = mysqli_query($conn, "SELECT name, title, content FROM board WHERE idx='$bno';");
+$board = $sql->fetch_array();
+$name = $board['name'];
+$title = $board['title'];
+$content = $board['content'];
 
-    // 게시물 업데이트 쿼리 실행
-    $sql = "UPDATE board SET title = '$title', content = '$content' WHERE idx = '$bno'";
-    $result = mysqli_query($conn, $sql);
+if ($name != $uid) {
+  echo "<script>alert('Authentication err.. :(');history.back();</script>";
+  exit;
+}
 
-    if ($result) {
-        // 수정 성공 시
-        echo "<script>alert('게시물이 수정되었습니다.');</script>";
-        echo "<script>location.href = 'board.php';</script>";
-        exit();
-    } else {
-        // 수정 실패 시
-        echo "<script>alert('게시물 수정에 실패했습니다.');</script>";
-        echo "<script>history.back();</script>";
-        exit();
-    }
-} else {
-    // GET 요청일 경우 게시물 정보 가져오기
-    $bno = $_GET['bno'];
-
-    $sql = "SELECT * FROM board WHERE idx = '$bno'";
-    $result = mysqli_query($conn, $sql);
-
-    if (mysqli_num_rows($result) == 1) {
-        $board = mysqli_fetch_assoc($result);
-    } else {
-        // 해당 게시물이 존재하지 않을 경우
-        echo "<script>alert('존재하지 않는 게시물입니다.');</script>";
-        echo "<script>history.back();</script>";
-        exit();
-    }
+$result = mysqli_query($conn, "SELECT file_name FROM `file` WHERE post_id='$bno'");
+$fileNames = array();
+while ($row = mysqli_fetch_array($result)) {
+  $fileNames[] = $row['file_name'];
 }
 ?>
 
-<!-- HTML 부분 -->
-<!DOCTYPE html>
 <html>
-<head>
-    <meta charset="UTF-8">
-    <title>게시물 수정</title>
-</head>
-<body>
-    <h2>게시물 수정</h2>
-    <form method="post" action="edit_post.php">
-        <input type="hidden" name="bno" value="<?php echo $board['idx']; ?>">
-        <div>
-            <label for="title">제목</label>
-            <input type="text" id="title" name="title" value="<?php echo $board['title']; ?>">
-        </div>
-        <div>
-            <label for="content">내용</label>
-            <textarea id="content" name="content"><?php echo $board['content']; ?></textarea>
-        </div>
-        <button type="submit">수정하기</button>
-    </form>
-</body>
+	<head>
+		<link rel="stylesheet" href="../style/style_write.css">
+		<meta charset="UTF-8">
+		<title>board</title>
+		<script>
+      function handleFileSelect(event) {
+        var input = event.target;
+        var fileNameDisplay = document.getElementById("file-name-display");
+        fileNameDisplay.innerHTML = "";
+        
+        for (var i = 0; i < input.files.length; i++) {
+          var fileName = input.files[i].name;
+          var span = document.createElement("span");
+          span.textContent = fileName;
+          fileNameDisplay.appendChild(span);
+        }
+      }
+      
+      window.addEventListener('DOMContentLoaded', function() {
+        var fileNameDisplay = document.getElementById("file-name-display");
+        fileNameDisplay.innerHTML = "";
+
+        <?php foreach ($fileNames as $fileName) { ?>
+          var span = document.createElement("span");
+          span.textContent = "<?php echo addslashes($fileName); ?>";
+          fileNameDisplay.appendChild(span);
+        <?php } ?>
+      });
+    </script>
+
+	</head>
+	<body>
+		<div id="board_write">
+			<div id="container-back">
+				<h4><a href="board.php">←Back</a></h4>
+			</div>
+		  <h4>Upload posting</h4>
+		  <div id="write_area">
+		    <form action="write_ok.php" method="post" enctype="multipart/form-data">
+		      <hr>
+		      <div id="in_file">
+            <label for="file-upload" class="custom-file-upload">Upload File</label>
+            <input type="file" id="file-upload" name="b_file[]" multiple="multiple" style="display:none;" onchange="handleFileSelect(event)">
+            <span class="file-name" id="file-name-display"></span>
+					</div>
+				  <div id="in_title">
+				    <textarea name="title" id="utitle" rows="1" cols="55" placeholder="Title" maxlength="100" required><?php echo $title; ?></textarea>
+				  </div>
+				  <div id="in_content">
+				    <textarea name="content" id="ucontent" placeholder="Content" required><?php echo $content; ?></textarea>
+				  </div>
+				  <div id="in_submit">
+				  	<button type="submit">Go!</button>
+				  </div>
+		    </form>
+		  </div>
+		</div>
+	</body>
 </html>

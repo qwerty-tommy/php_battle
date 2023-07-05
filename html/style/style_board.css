@@ -35,7 +35,7 @@ h1 {
   border-radius: 5px;
   padding: 5px 10px;
   margin-right: 10px;
-  width: 70px;
+  width: 100px;
 }
 
 #board_area {
@@ -46,6 +46,19 @@ h1 {
   border: 1px solid #ccc;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#board_area>#search_box a{
+  text-decoration: none;
+  height: 30px;
+  padding: 6px 10px;
+  font-size: 14px;
+  background-color: #4CAF50;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+
 }
 
 #search_box {
@@ -111,16 +124,6 @@ table.list-table tbody td a {
   margin-right: 5px;
 }
 
-#page_num ul li a {
-  display: block;
-  padding: 5px 10px;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  color: #000;
-  text-decoration: none;
-}
-
 #page_num ul li a:hover {
   background-color: #f2f2f2;
 }
@@ -137,4 +140,42 @@ table.list-table tbody td a {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+}
+
+span#hit {
+	position: relative;
+  left: 5px;
+  color: #007bff;
+  font-size: 12px;
+  font-weight: 900;
+  padding: 2px 5px;
+}
+
+#page_num ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#page_num ul li {
+  margin-right: 5px;
+}
+
+#page_num ul li a.paging-bt {
+  display: inline-block;
+  padding: 4px 10px;
+  background-color: #f5f5f5;
+  border-radius: 10px;
+  color: #333;
+  text-decoration: none;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+#page_num ul li a.current-page {
+  border-radius: 10px;
+  background-color: #008bff;
+  color: #fff;
+  border: none;
 }

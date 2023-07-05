@@ -16,7 +16,7 @@
 	  ?>
 	</div>
 	<div id="wrapper-full">
-		<h4><a href="board.php">←Back</a></h4>
+		<h4><a href="javascript:history.go(-1)">←Back</a></h4>
 		<?php
 		session_start();
 		if (!isset($_SESSION['userid'])) {
@@ -30,7 +30,7 @@
 		$fet = mysqli_query($conn, "update board set hit = '$hit' where idx = '$bno'");
 		$sql = mysqli_query($conn, "select * from board where idx='$bno'");
 		$board = $sql->fetch_array();
-		$sql2=mysqli_query($conn, "select * from file where board_num='$bno'");
+		$sql2=mysqli_query($conn, "select file_name from file where post_id='$bno'");
 		?>
 		
 		<!--- main post start-->
@@ -44,7 +44,7 @@
 			<?php
 			while($file= mysqli_fetch_array($sql2)) {
 			?>
-				<a href="/var/www/upload/<?php echo $file['file'];?>" download><?php echo $file['file']; ?></a>
+				<a href="../upload/<?php echo $file['file_name'];?>" download><?php echo $file['file_name']; ?></a>
 				<br>
 			<?php			
 			}	
@@ -53,29 +53,10 @@
 				<?php echo $board['name'];?> <?php echo $board['date']; ?> Hit:<?php echo $board['hit']; ?>
 			</div>
 			<div id="bo_ser" class="wrapper-button">
-        <a class="button-edit" href="#" onclick="editPost(<?php echo $board['idx']; ?>)">edit</a>
+        <a class="button-edit" href="edit.php?bno=<?php echo $board['idx']; ?>">edit</a>
         <a class="button-delete" href="delete.php?bno=<?php echo $board['idx']; ?>">delete</a>
     	</div>
 		</div>
-		<script>
-			function editPost(idx) {
-		    // AJAX 요청 보내기
-		    var xhr = new XMLHttpRequest();
-		    xhr.open('POST', 'edit_post.php');
-		    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-		    xhr.onload = function() {
-	        if (xhr.status === 200) {
-            // 서버에서 응답을 받았을 때의 동작
-            // 예를 들어, 수정이 성공했을 경우 메시지를 표시하거나 업데이트된 내용을 화면에 반영할 수 있습니다.
-            alert(xhr.responseText);
-	        } else {
-            // 오류 처리
-            alert('An error occurred while editing the post.');
-	        }
-		    };
-		    xhr.send('idx=' + idx);
-			}
-		</script>
 		
 		<!--- reply list start-->
 	
