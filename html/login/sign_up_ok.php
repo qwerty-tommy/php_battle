@@ -1,15 +1,15 @@
 <?php
 require_once('../../config/login_config.php');
-
-$userid = $_POST['userid'];
-$userpw = $_POST['userpw'];
+require_once('../../config/input_config.php');
+$userid = sanitize_input($conn, $_POST['userid']);
+$userpw = sanitize_input($conn, $_POST['userpw']);
 
 $checkQuery = "SELECT * FROM login WHERE login_id='$userid'";
 $result = mysqli_query($conn, $checkQuery);
 
 if (mysqli_num_rows($result) > 0) {
     echo '<meta charset="utf-8" />';
-    echo '<script type="text/javascript">alert("Duplicate ID. Please use a different ID.");</script>';
+    echo '<script type="text/javascript">alert("Duplicate ID. Please use another ID.");</script>';
     echo '<meta http-equiv="refresh" content="0 url=/login/sign_up.php">';
     exit;
 }

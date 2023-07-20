@@ -1,27 +1,35 @@
 <?php
 require_once('../../../config/login_config.php');
-$rno = $_POST['rno'];
-$sql = mysqli_query($conn, "select * from reply where idx='$rno'"); 
-$reply = $sql->fetch_array();
+require_once('../../../config/input_config.php');
+$rno = sanitize_input($conn, $_GET['rno']);
+$bno = sanitize_input($conn, $_GET['bno']);
+$pwk = sanitize_input($conn, $_GET['pw']);
 
-$bno = $_POST['bno']; 
-$sql2 = mysqli_query($conn, "select * from board where idx='$bno'");
-$board = $sql2->fetch_array();
+$stmt1 = $conn->prepare("SELECT * FROM reply WHERE idx = ?");
+$stmt1->bind_param("i", $rno);
+$stmt1->execute();
+$reply = $stmt1->get_result()->fetch_array();
+$stmt1->close();
 
-$pwk = $_POST['pw'];
+$stmt2 = $conn->prepare("SELECT * FROM board WHERE idx = ?");
+$stmt2->bind_param("i", $bno);
+$stmt2->execute();
+$board = $stmt2->get_result()->fetch_array();
+$stmt2->close();
+
 $bpw = $reply['pw'];
 
-
-if($pwk==$bpw) {
-	$sql3 = mysqli_query($conn, "update reply set content='".$_POST['content']."' where idx = '".$rno."'");
-?> 
+if ($pwk === $bpw) {
+    $stmt3 = $conn->prepare("UPDATE reply SET content = ? WHERE idx = ?");
+    $stmt3->bind_param("si", $_POST['content'], $rno);
+    $stmt3->execute();
+    $stmt3->close();
+?>
 <script type="text/javascript">alert('수정되었습니다.'); location.replace("../read.php?idx=<?php echo $bno; ?>");</script>
-<?php 
-}else{ 
+<?php
+} else {
 ?>
 <script type="text/javascript">alert('비밀번호가 틀립니다');history.back();</script>
 <?php
 }
 ?>
-
-

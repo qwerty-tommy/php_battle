@@ -6,12 +6,12 @@
     <link rel="stylesheet" href="../style/style_login.css">
     <?php
 	session_start();
+    require_once('../../config/login_config.php');
+    require_once('../../config/input_config.php');
+    $userid = sanitize_input($conn, $_POST['userid']);
+    $userpw = sanitize_input($conn, $_POST['userpw']);
 	
     if (isset($_POST['userid']) && isset($_POST['userpw'])) {
-        $userid = $_POST['userid'];
-        $userpw = $_POST['userpw'];
-        require_once('../../config/login_config.php');
-
         $sql = "SELECT * FROM login WHERE login_id='$userid'";
         $result = mysqli_query($conn, $sql);
         if (mysqli_num_rows($result) == 1) {

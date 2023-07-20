@@ -1,5 +1,7 @@
 <?php
 require_once('../../../config/login_config.php');
+require_once('../../../config/input_config.php');
+$rno = sanitize_input($conn, $_GET['rno']);
 
 session_start();
 $uid=$_SESSION['userid'];
@@ -8,8 +10,7 @@ if(!isset($uid)) {
 	exit();
 }
 
-$rno = $_GET['rno']; 
-if(!isset($_GET['rno'])){
+if(!isset($rno)){
 	header('Location: ../board/board.php');
 	exit();
 }

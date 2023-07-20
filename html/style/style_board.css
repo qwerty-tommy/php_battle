@@ -20,8 +20,11 @@ h1 {
 	align-items: center;
 	text-align: right;
 	color: #4CAF50;
-	height: 40px;
+	height: 50px;
 	background-color: #4CAF50;
+  position: fixed;
+  top: 0;
+  width: 100%;
 }
 
 #nav a {
@@ -40,7 +43,7 @@ h1 {
 
 #board_area {
   max-width: 800px;
-  margin: 50px auto;
+  margin: 100px auto;
   padding: 20px;
   background-color: #fff;
   border: 1px solid #ccc;
@@ -178,4 +181,9 @@ span#hit {
   background-color: #008bff;
   color: #fff;
   border: none;
+}
+
+a#hello-name{
+  width: 200px;
+  cursor: default;
 }

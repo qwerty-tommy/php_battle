@@ -37,7 +37,7 @@
 </head>
 <body>
 	<form method="post" action="sign_up_ok.php" onsubmit="return validateForm()">
-		<h1>Sign up</h1>
+		<h1>Sign-up</h1>
 		<fieldset>
 			<table>
 				<tr>

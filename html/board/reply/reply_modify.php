@@ -5,9 +5,10 @@
 </head>
 <body>
   <?php
-		require_once('../../../config/login_config.php');
-		$bno = $_GET['bno']; 
-		$rno = $_GET['rno']; 
+    require_once('../../../config/login_config.php');
+    require_once('../../../config/input_config.php');
+    $rno = sanitize_input($conn, $_GET['rno']);
+    $bno = sanitize_input($conn, $_GET['bno']);
 		$sql = mysqli_query($conn, "select * from reply where idx='$rno' and con_num='$bno'");
 		$reply = $sql->fetch_array();
 	?>

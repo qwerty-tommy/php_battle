@@ -1,20 +1,25 @@
 <?php
-  require_once('../../../config/login_config.php');
-  $bno = $_GET['idx'];
-  session_start();
-  $uid=$_SESSION['userid'];
-  
-	if (!$uid) {
-		header('Location: ../login/login.php');
-		exit();
-	}	
-  
-  if($bno && $_POST['content']){
-    $sql = mysqli_query($conn, "insert into reply(post_id,name,content) values('".$bno."','".$uid."','".$_POST['content']."')");
+require_once('../../../config/login_config.php');
+require_once('../../../config/input_config.php');
+$bno = sanitize_input($conn, $_GET['idx']);
+$content = sanitize_input($conn, $_POST['content']);
+session_start();
+$uid = $_SESSION['userid'];
+
+if (!$uid) {
+    header('Location: ../login/login.php');
+    exit();
+}
+
+if ($bno && $content) {
+    $stmt = $conn->prepare("INSERT INTO reply (post_id, name, content) VALUES (?, ?, ?)");
+    $stmt->bind_param("iss", $bno, $uid, $content);
+    $stmt->execute();
+    $stmt->close();
+
     echo "<script>location.href='../read.php?idx=$bno';</script>";
-  }else{
+} else {
     echo "<script>alert('Something\'s wrong.. :('); 
     history.back();</script>";
-  }
-	
+}
 ?>

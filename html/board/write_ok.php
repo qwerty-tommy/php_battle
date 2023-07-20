@@ -5,19 +5,21 @@ if(!isset($username)) {
 	header('Location: ../login/login.php');
 	exit();
 }
-$title = $_POST['title'];
-$content = $_POST['content'];
+require_once('../../config/login_config.php');
+require_once('../../config/input_config.php');
+$title = sanitize_input($conn, $_POST['title']);
+$content = sanitize_input($conn, $_POST['content']);
+
 $maxfilesize = 1000000; 
 $upload_count = count($_FILES['b_file']['name']);
 
-require_once("../../config/input_checker.php");
-if (input_check($content) || input_check($title)) {
-	echo "<script>
-		alert('Attack Detected! :(');
-		history.back();
-	</script>"; 
-	exit;      
-}
+// if (input_check($content) || input_check($title)) {
+// 	echo "<script>
+// 		alert('Attack Detected! :(');
+// 		history.back();
+// 	</script>"; 
+// 	exit;      
+// }
 
 if($upload_count>5){ 
 	echo "<script>
@@ -29,6 +31,7 @@ if($upload_count>5){
 
 for($i=0;$i<$upload_count;$i++){
 	$filename = $_FILES['b_file']['name'][$i];
+	$filename = sanitize_input($conn, $filename);
 
 	$ext = explode(".", strtolower($filename),2);
 
@@ -41,7 +44,7 @@ for($i=0;$i<$upload_count;$i++){
 	}     
 	if($_FILES['b_file']['size'][$i] > $maxfilesize){ 
 	    echo "<script>
-			alert(($i+1)+'st file has exceeded the maximum file size limit!');
+			alert(($i+1)+'st file has exceeded the maximum file size limit! :(');
 			history.back();
 		</script>";
 		exit;              
@@ -58,6 +61,8 @@ $board_num=(int)$sql2[0];
 for($i=0;$i<$upload_count;$i++){   
 	$tmpfile =  $_FILES['b_file']['tmp_name'][$i];
 	$filename = $_FILES['b_file']['name'][$i];
+	$filename = sanitize_input($conn, $filename);
+
 	$folder = "../upload/".$filename;
 	move_uploaded_file($tmpfile,$folder);
 	mysqli_query($conn, "insert into file(idx, post_id, file_name) values(0,'$board_num','$filename')");
