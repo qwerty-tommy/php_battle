@@ -1,3 +1,4 @@
 html/upload/*
 html/.secret
-config/*
+config/gt
+config/login_config.php
