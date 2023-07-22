@@ -7,8 +7,8 @@ if(!isset($username)) {
 }
 require_once('../../config/login_config.php');
 require_once('../../config/input_config.php');
-$title = sanitize_input($conn, $_POST['title']);
-$content = sanitize_input($conn, $_POST['content']);
+$title = sqli_checker($conn, $_POST['title']);
+$content = sqli_checker($conn, $_POST['content']);
 
 $maxfilesize = 1000000; 
 $upload_count = count($_FILES['b_file']['name']);
@@ -31,7 +31,7 @@ if($upload_count>5){
 
 for($i=0;$i<$upload_count;$i++){
 	$filename = $_FILES['b_file']['name'][$i];
-	$filename = sanitize_input($conn, $filename);
+	$filename = sqli_checker($conn, $filename);
 
 	$ext = explode(".", strtolower($filename),2);
 
@@ -61,7 +61,7 @@ $board_num=(int)$sql2[0];
 for($i=0;$i<$upload_count;$i++){   
 	$tmpfile =  $_FILES['b_file']['tmp_name'][$i];
 	$filename = $_FILES['b_file']['name'][$i];
-	$filename = sanitize_input($conn, $filename);
+	$filename = sqli_checker($conn, $filename);
 
 	$folder = "../upload/".$filename;
 	move_uploaded_file($tmpfile,$folder);

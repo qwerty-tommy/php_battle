@@ -8,8 +8,8 @@
 	session_start();
     require_once('../../config/login_config.php');
     require_once('../../config/input_config.php');
-    $userid = sanitize_input($conn, $_POST['userid']);
-    $userpw = sanitize_input($conn, $_POST['userpw']);
+    $userid = sqli_checker($conn, $_POST['userid']);
+    $userpw = sqli_checker($conn, $_POST['userpw']);
 	
     if (isset($_POST['userid']) && isset($_POST['userpw'])) {
         $sql = "SELECT * FROM login WHERE login_id='$userid'";

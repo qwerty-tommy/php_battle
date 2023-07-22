@@ -7,7 +7,7 @@ if (!isset($uid)) {
 }
 require_once('../../config/login_config.php');
 require_once('../../config/input_config.php');
-$bno = sanitize_input($conn, $_GET['bno']);
+$bno = sqli_checker($conn, $_GET['bno']);
 $sql = mysqli_query($conn, "select name from board where idx='$bno';");
 $board = $sql->fetch_array();
 if($uid==$board['name']){

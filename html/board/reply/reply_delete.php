@@ -1,7 +1,7 @@
 <?php
 require_once('../../../config/login_config.php');
 require_once('../../../config/input_config.php');
-$rno = sanitize_input($conn, $_GET['rno']);
+$rno = sqli_checker($conn, $_GET['rno']);
 
 session_start();
 $uid=$_SESSION['userid'];

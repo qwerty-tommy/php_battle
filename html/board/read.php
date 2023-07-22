@@ -5,30 +5,95 @@
 	<title>post</title>
 </head>
 <body>
+<script>
+	document.addEventListener("DOMContentLoaded", function() {
+		const editReplyForms = document.querySelectorAll(".reply_view");
+
+		editReplyForms.forEach(form => {
+			const replyId = form.getAttribute("data-reply-id");//help!
+			const replyContent = form.querySelector(".edit-reply-content");
+			const cancelButton = form.querySelector(".button-cancel-edit");
+			const saveButton = form.querySelector(".button-save-edit");
+			const editButton = form.querySelector(".button-edit-reply");
+			const deleteButton = form.querySelector("a.button-delete");
+
+			const enableEdit = () => {
+				replyContent.disabled = false;
+				cancelButton.style.display = "inline-block";
+				saveButton.style.display = "inline-block";
+
+				editButton.style.display = "none";
+				deleteButton.style.display = "none";
+			};
+
+			const disableEdit = () => {
+				replyContent.disabled = true;
+				cancelButton.style.display = "none";
+				saveButton.style.display = "none";
+
+				editButton.style.display = "inline-block";
+				deleteButton.style.display = "inline-block";
+			};
+
+			disableEdit();
+
+			form.querySelector(".button-edit-reply").addEventListener("click", () => {
+				enableEdit();
+			});
+			
+			cancelButton.addEventListener("click", (e) => {
+				e.preventDefault();
+				disableEdit();
+			});
+			
+			saveButton.addEventListener("click", (e) => {
+				e.preventDefault();
+				const editedContent = replyContent.value;
+
+				fetch("reply/reply_update.php", {
+					method: "POST",
+					body: JSON.stringify({ replyId: replyId, editedContent: editedContent }),
+					headers: {
+						"Content-Type": "application/json"
+					}
+				})
+				.then(response => response.json())
+				.then(data => {
+					if (data.success) {
+						disableEdit();
+					} else {
+						alert("res err..");
+					}
+				})
+				.catch(error => {
+					alert("axios err..");
+				});
+			});
+		});
+	});
+</script>
 	<div id="nav">
-	  <?php
-	  session_start();
-	  $uid=$_SESSION['userid'];
-	  if (isset($uid)) {
-      echo '<a href="./logout.php">Logout :(</a>';
-		  echo '<a id="hello-name">'.$uid.'</a>';
-	  } else {
-      echo '<a href="../login/login.php">Login:)</a>';
-	  }
-	  ?>
+		<?php
+		require_once('../../config/input_config.php');
+		session_start();
+		$uid=$_SESSION['userid'];
+		if (!isset($uid)) {
+			//echo '<a href="../login/login.php">Login:)</a>';
+			header('Location: ../login/login.php');
+			exit();
+		}	
+		else {
+			echo '<a href="../login/logout.php">Logout :(</a>';
+			echo '<a id="hello-name">'.$uid.'</a>';
+		}
+	  	?>
 	</div>
 	<div id="wrapper-full">
 		<h4><a href="board.php">←Back</a></h4>
 		<!-- <h4><a href="javascript:history.go(-1)">←Back</a></h4> -->
 		<?php
-		session_start();
-		if (!isset($uid)) {
-			header('Location: ../login/login.php');
-			exit();
-		}	
 		require_once('../../config/login_config.php');
-		require_once('../../config/input_config.php');
-		$bno = sanitize_input($conn, $_GET['idx']);
+		$bno = sqli_checker($conn, $_GET['idx']);
 		$hit = mysqli_fetch_array(mysqli_query($conn, "select * from board where idx ='$bno'"));
 		$hit = $hit['hit'] + 1;
 		$fet = mysqli_query($conn, "update board set hit = '$hit' where idx = '$bno'");
@@ -40,45 +105,61 @@
 		<!--- main post start-->
 		
 		<div class="post_view card">
-			<h2><?php echo $board['title']; ?></h2>
+			<h2><?php echo xss_checker($board['title']); ?></h2>
 			<div id="bo_line"></div>
 			<div id="bo_content">
-				<?php echo nl2br("$board[content]"); ?>
+				<?php echo xss_checker(nl2br("$board[content]")); ?>
 			</div>
 			<?php
 			while($file= mysqli_fetch_array($sql2)) {
 			?>
-				<a href="../upload/<?php echo $file['file_name'];?>" download><?php echo $file['file_name']; ?></a>
+				<a href="../upload/<?php echo xss_checker($file['file_name']);?>" download><?php echo xss_checker($file['file_name']); ?></a>
 				<br>
 			<?php			
 			}	
 			?>
 			<div id="user_info">
-				<?php echo $board['name'];?> <?php echo $board['date']; ?> Hit:<?php echo $board['hit']; ?>
+				<?php echo xss_checker($board['name']); ?> 
+				<?php echo xss_checker($board['date']); ?> 
+				Hit:<?php echo xss_checker($board['hit']); ?>
 			</div>
 			<div id="bo_ser" class="wrapper-button">
-        <a class="button-edit" href="edit.php?bno=<?php echo $board['idx']; ?>">edit</a>
-        <a class="button-delete" href="delete.php?bno=<?php echo $board['idx']; ?>">delete</a>
-    	</div>
+				<a class="button-edit" href="edit.php?bno=<?php echo $board['idx']; ?>">edit</a>
+				<a class="button-delete" href="delete.php?bno=<?php echo $board['idx']; ?>">delete</a>
+    		</div>
 		</div>
 		
 		<!--- reply list start-->
-	
 		<?php
 		$sql3 = mysqli_query($conn, "select * from reply where post_id='$bno' order by idx desc");
 		while($reply = $sql3->fetch_array()){ 
+			$user_can_edit_reply=($reply['name']===$uid);
 		?>
 		<div>
-			<div class="reply_view card">
+			<div class="reply_view card" data-reply-id="<?php echo $reply['idx']; ?>">
 				<div>
-					<h4><?php echo nl2br("$reply[content]");?></h4>
+					<?php if ($user_can_edit_reply) { ?>
+						<!-- Edit mode for the reply -->
+						<form class="edit-reply-form">
+							<textarea class="edit-reply-content"><?php echo xss_checker(nl2br($reply['content']));?></textarea>
+						</form>
+					<?php } else { ?>
+						<!-- Display the reply content -->
+						<h4><?php echo xss_checker(nl2br($reply['content']));?></h4>
+					<?php } ?>
 				</div>
 				<div id="user_info">
-					<?php echo $reply['name'];?> <?php echo $reply['date']; ?>
+					<?php echo xss_checker($reply['name']);?> <?php echo $reply['date']; ?>
 				</div>
 				<div class="wrapper-button">
-					<a class="button-edit" href="reply/reply_modify.php?rno=<?php echo $reply['idx']; ?>">edit</a>
-					<a class="button-delete" href="reply/reply_delete.php?rno=<?php echo $reply['idx']; ?>">delete</a>
+					<?php if ($user_can_edit_reply) { ?>
+						<div class="wrapper-button">
+								<button class="button-save-edit">Save</button>
+								<button class="button-cancel-edit">Cancel</button>
+							</div>
+						<button class="button-edit-reply">Edit</button>
+						<a class="button-delete" href="reply/reply_delete.php?rno=<?php echo $reply['idx']; ?>">Delete</a>
+					<?php } ?>
 				</div>
 			</div>
 		</div>
@@ -94,7 +175,7 @@
 					<textarea name="content" class="reply_content" id="re_content" placeholder="Content"></textarea>
 				</div>
 				<div class="wrapper-button">
-					<button id="rep_bt" class="re_bt">reply</button>
+					<button id="rep_bt" class="re_bt">Reply</button>
 				</div>
 			</form>
 		</div>

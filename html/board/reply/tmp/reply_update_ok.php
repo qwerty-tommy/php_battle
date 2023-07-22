@@ -1,9 +1,9 @@
 <?php
 require_once('../../../config/login_config.php');
 require_once('../../../config/input_config.php');
-$rno = sanitize_input($conn, $_GET['rno']);
-$bno = sanitize_input($conn, $_GET['bno']);
-$pwk = sanitize_input($conn, $_GET['pw']);
+$rno = sqli_checker($conn, $_GET['rno']);
+$bno = sqli_checker($conn, $_GET['bno']);
+$pwk = sqli_checker($conn, $_GET['pw']);
 
 $stmt1 = $conn->prepare("SELECT * FROM reply WHERE idx = ?");
 $stmt1->bind_param("i", $rno);

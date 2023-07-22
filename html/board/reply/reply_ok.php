@@ -1,8 +1,8 @@
 <?php
 require_once('../../../config/login_config.php');
 require_once('../../../config/input_config.php');
-$bno = sanitize_input($conn, $_GET['idx']);
-$content = sanitize_input($conn, $_POST['content']);
+$bno = sqli_checker($conn, $_GET['idx']);
+$content = sqli_checker($conn, $_POST['content']);
 session_start();
 $uid = $_SESSION['userid'];
 

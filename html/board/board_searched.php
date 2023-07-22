@@ -9,7 +9,7 @@
 		<?php
 		session_start();
 		if (isset($_SESSION['userid'])) {
-			echo '<a href="./logout.php">Logout :(</a>';
+			echo '<a href="../login/logout.php">Logout :(</a>';
 			echo '<a id="hello-name">'.$_SESSION['userid'].'</a>';
 		} else {
 			echo '<a href="../login/login.php">Login :)</a>';
@@ -50,9 +50,9 @@
 			$search_con = $_GET['search'];
 			$page = $_GET['page'];
 
-			$category = sanitize_input($conn, $category);
-			$search_con = sanitize_input($conn, $search_con);
-			$page = sanitize_input($conn, $page);
+			$category = sqli_checker($conn, $category);
+			$search_con = sqli_checker($conn, $search_con);
+			$page = sqli_checker($conn, $page);
 
 			if (isset($page)) {
 				if ($page < 1) {
@@ -78,28 +78,37 @@
 			$block_start = (($block_num - 1) * $block_ct) + 1; 
 			$block_end = $block_start + $block_ct - 1; 
 
+			if($block_start<0){
+				$block_start=0;
+			}
+
 			$total_page = ceil($row_num / $list);
 			if ($block_end > $total_page) $block_end = $total_page; 
 			$total_block = ceil($total_page / $block_ct); 
 			$start_num = ($page - 1) * $list;
 
 			$sql2 = mysqli_query($conn,"select * from board where $category like '%$search_con%' order by idx desc limit $start_num, $list");
-			?>
-			<?php while ($board = $sql2->fetch_array()) {
-				$title = $board["title"]; 
-				if (strlen($title) > 30) { 
-					$title = str_replace($board["title"], mb_substr($board["title"], 0, 30, "utf-8") . "...", $board["title"]);
-				}
+			if ($sql2 === false) {
+                echo "<tr><td colspan='4'>No data available.</td></tr>";
+            } else {
+				while ($board = $sql2->fetch_array()) {
+					$title = $board["title"];
+                    $max_length = 30;
+					if (strlen($title) > $max_length) {
+						$title = substr($title, 0, $max_length) . "...";
+					}
 				?>
 				<tbody>
-					<tr>
-						<td width="70"><?php echo $board['idx']; ?></td>
-						<td width="500"><a href="read.php?idx=<?php echo $board["idx"];?>"><?php echo $title;?></a></td>
-						<td width="120"><?php echo $board['name']?></td>
-						<td width="100"><?php echo $board['date']?></td>
-					</tr>
+                    <tr>
+                        <td width="70"><?php echo xss_checker($board['idx']); ?></td>
+                        <td width="500"><a href="read.php?idx=<?php echo xss_checker($board["idx"]); ?>"><?php echo xss_checker($title); ?></a><span
+                                    id="hit"><?php echo $board['hit']; ?></span></td>
+                        <td width="120"><?php echo xss_checker($board['name']) ?></td>
+                        <td width="100"><?php echo xss_checker($board['date']) ?></td>
+                    </tr>
 				</tbody>
-			<?php } ?>
+			<?php } 
+			}?>
 		</table>
 		<hr>
 		<div id="page_num">

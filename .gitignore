@@ -1,4 +1,4 @@
 html/upload/*
 html/.secret
 config/gt
-config/login_config.php
+config/mysql_info.php
