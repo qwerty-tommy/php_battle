@@ -14,6 +14,7 @@
         } else {
             echo '<a href="../login/login.php">Login :)</a>';
         }
+        echo '<a href="game/game.php">Breaktime!</a>';
         ?>
     </div>
     <div id="board_area">
