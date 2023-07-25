@@ -1,3 +1,13 @@
+<?php
+require_once('../../../config/login_config.php');
+require_once('../../../config/input_config.php');
+session_start();
+if (!isset($_SESSION['userid'])) {
+    header("Location: ../board.php");
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -58,6 +68,7 @@
             <div class="menu-button" id="gameDescription">Game Description</div>
             <div class="menu-button" id="scoreboard">Scoreboard</div>
             <div class="menu-button" id="gameSettings">Game Settings</div>
+            <div class="menu-button" id="exitGame">Exit Game</div> <!-- 나가기 버튼 추가 -->
         </div>
     </div>
 
@@ -107,6 +118,18 @@
                 dx: Math.random() * 2 - 1, // Random horizontal speed (-1 to 1)
                 dy: Math.random() * 2 - 1  // Random vertical speed (-1 to 1)
             };
+
+            if (Math.abs(circle.x - fish.x) < 100 && Math.abs(circle.y - fish.y) < 100) {
+                const speed = Math.random() * 1.5 + 0.5; // Random speed between 0.5 and 2
+                if (circle.size > fish.size) {
+                    circle.dx = (fish.x - circle.x) / distance * speed;
+                    circle.dy = (fish.y - circle.y) / distance * speed;
+                } else {
+                    circle.dx = -(fish.x - circle.x) / distance * speed;
+                    circle.dy = -(fish.y - circle.y) / distance * speed;
+                }
+            }
+            
             circles.push(circle);
         }
 
@@ -152,7 +175,7 @@
         function drawScore() {
             ctx.font = '24px Arial';
             ctx.fillStyle = 'black';
-            ctx.fillText('Score: ' + Math.round(fish.size), 20, 40); // Display the fish's size (rounded) as the score
+            ctx.fillText('Size : ' + Math.round(fish.size), 20, 40); // Display the fish's size (rounded) as the score
             drawHearts();
         }
 
@@ -209,6 +232,13 @@
             canvas.style.filter = "none";
         }
 
+        function exitGame() {
+            window.location.href = '../board.php'; // '../board.php'로 이동
+        }
+
+        document.getElementById("exitGame").addEventListener("click", exitGame); // 나가기 버튼 클릭 이벤트
+
+
         document.getElementById("startGame").addEventListener("click", () => {
             hideMenu();
             resetGame();
@@ -220,11 +250,11 @@
         });
 
         document.getElementById("scoreboard").addEventListener("click", () => {
-            alert("Scoreboard: Your highest score: " + Math.round(fish.maxSize));
+            alert('Work in progress...')
         });
 
         document.getElementById("gameSettings").addEventListener("click", () => {
-            alert("Game Settings: You can customize the game settings here.");
+            alert("Work in progress...");
         });
 
         setInterval(createCircle,500); // Spawn circles every 1 second (more active)
@@ -240,7 +270,30 @@
         }
 
         function gameOver() {
-            alert("Game Over! Your Final Score: " + Math.round(fish.size));
+            <?php
+            // 점수 저장하기
+            if (isset($_SESSION['score'])) {
+                $score = $_SESSION['score'];
+                $userid = $_SESSION['userid'];
+
+                // 이전 최고 점수 가져오기
+                $sql = "SELECT highest_score FROM game WHERE login_id = '$userid'";
+                $result = mysqli_query($conn, $sql);
+                $row = mysqli_fetch_assoc($result);
+                $highest_score = $row['highest_score'];
+
+                // 최고 점수 갱신 확인
+                if ($score > $highest_score) {
+                    $sql = "UPDATE game SET highest_score = '$score' WHERE login_id = '$userid'";
+                    mysqli_query($conn, $sql);
+                }
+
+                // 점수를 세션에서 삭제
+                unset($_SESSION['score']);
+            }
+            ?>
+            
+            alert("Game Over! Your Final Score: " + fish.eatenLargePrey);
             resetGame();
             showMenu();
         }

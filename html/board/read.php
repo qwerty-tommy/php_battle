@@ -84,7 +84,7 @@
 		}	
 		else {
 			echo '<a href="../login/logout.php">Logout :(</a>';
-			echo '<a id="hello-name">'.$uid.'</a>';
+			echo '<a id="hello-name">ID : '.$uid.'</a>';
 		}
 	  	?>
 	</div>
@@ -113,7 +113,7 @@
 			<?php
 			while($file= mysqli_fetch_array($sql2)) {
 			?>
-				<a href="../upload/<?php echo xss_checker($file['file_name']);?>" download><?php echo xss_checker($file['file_name']); ?></a>
+				<a href="../upload/<?php echo ($file['file_name']);?>" download><?php echo ($file['file_name']); ?></a>
 				<br>
 			<?php			
 			}	

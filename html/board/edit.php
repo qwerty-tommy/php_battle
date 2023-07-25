@@ -67,12 +67,13 @@ while ($row = mysqli_fetch_array($result)) {
 			</div>
 		  <h4>Upload posting</h4>
 		  <div id="write_area">
-		    <form action="write_ok.php" method="post" enctype="multipart/form-data">
+		    <form action="edit_ok.php" method="post" enctype="multipart/form-data">
 		      <hr>
 		      <div id="in_file">
             <label for="file-upload" class="custom-file-upload">Upload File</label>
             <input type="file" id="file-upload" name="b_file[]" multiple="multiple" style="display:none;" onchange="handleFileSelect(event)">
-            <span class="file-name" id="file-name-display"></span>
+            <input id="bno" name="bno" style="display:none" value=<?php echo $bno?>>
+			<span class="file-name" id="file-name-display"></span>
 					</div>
 				  <div id="in_title">
 				    <textarea name="title" id="utitle" rows="1" cols="55" placeholder="Title" maxlength="100" required><?php echo $title; ?></textarea>

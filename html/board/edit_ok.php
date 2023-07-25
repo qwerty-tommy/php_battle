@@ -7,10 +7,9 @@ if(!isset($username)) {
 }
 require_once('../../config/login_config.php');
 require_once('../../config/input_config.php');
-//$title = sqli_checker($conn, $_POST['title']);
-//$content = sqli_checker($conn, $_POST['content']);
-$title = $_POST['title'];
-$content = $_POST['content'];
+$title = sqli_checker($conn, $_POST['title']);
+$content = sqli_checker($conn, $_POST['content']);
+$bno = sqli_checker($conn, $_POST['bno']);
 
 $maxfilesize = 1000000; 
 $upload_count = count($_FILES['b_file']['name']);
@@ -30,23 +29,6 @@ if($upload_count>5){
 	</script>";
 	exit;              
 }
-
-// $allowedFileTypes = array(
-//     "image/jpeg",
-//     "image/png",
-//     "image/gif",
-//     "text/plain",
-//     "application/pdf"
-// );
-// $uploadedFileType = $_FILES['b_file']['type'][$i];
-
-// if (!in_array($uploadedFileType, $allowedFileTypes)) {
-//     echo "<script>
-//         alert('Unsupported file type.. :(');
-//         history.back();
-//     </script>"; 
-//     exit;
-// }
 
 for($i=0;$i<$upload_count;$i++){
 	$filename = $_FILES['b_file']['name'][$i];
@@ -71,7 +53,7 @@ for($i=0;$i<$upload_count;$i++){
 }
 
 require_once('../../config/login_config.php');
-mysqli_query($conn, "INSERT INTO board (name, title, content, date, hit) VALUES ('$username', '$title', '$content', NOW(), 0)"); 
+mysqli_query($conn, "UPDATE board SET title='$title', content='$content' WHERE idx=$bno"); 
 
 $sql=mysqli_query($conn, "select max(idx) from board");
 $sql2=mysqli_fetch_row($sql);

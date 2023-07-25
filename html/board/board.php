@@ -10,11 +10,10 @@
         session_start();
         if (isset($_SESSION['userid'])) {
             echo '<a href="../login/logout.php">Logout :(</a>';
-            echo '<a id="hello-name">' . $_SESSION['userid'] . '</a>';
+            echo '<a id="hello-name">ID : ' . $_SESSION['userid'] . '</a>';
         } else {
             echo '<a href="../login/login.php">Login :)</a>';
         }
-        echo '<a href="game/game.php">Breaktime!</a>';
         ?>
     </div>
     <div id="board_area">
@@ -89,7 +88,7 @@
             <tbody>
             <?php
             if ($sql2 === false) {
-                echo "<tr><td colspan='4'>No data available.</td></tr>";
+                echo "<tr><td colspan='4'>No data :(</td></tr>";
             } else {
                 while ($board = $sql2->fetch_array()) {
                     $title = $board["title"];

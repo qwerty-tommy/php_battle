@@ -187,3 +187,23 @@ a#hello-name{
   width: 200px;
   cursor: default;
 }
+
+
+#search_box button:hover,
+#write_btn button:hover {
+  background-color: #45a049; /* Change the background color on hover */
+}
+
+#page_num ul li a.paging-bt:hover {
+  background-color: #ddd; /* Change the background color of pagination buttons on hover */
+}
+
+#page_num ul li a.current-page:hover {
+  background-color: #0080ff; /* Change the background color of the current page pagination button on hover */
+}
+
+/* New CSS for hover effect on hit */
+span#hit:hover {
+  color: #f00; /* Change the hit color on hover */
+  cursor: pointer;
+}
