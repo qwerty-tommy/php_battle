@@ -1,12 +1,14 @@
 <?php
 function sqli_checker($conn, $input) {
     //mysqli input escape
-    return mysqli_real_escape_string($conn, $input);
+    //return mysqli_real_escape_string($conn, $input);
+    return $input;
 }
 
 function xss_checker($input){
     //xss html escape
-    return nl2br(htmlspecialchars($input));
+    //return nl2br(htmlspecialchars($input));
+    return $input;
 }
 
 // function normalize_input($input) {
